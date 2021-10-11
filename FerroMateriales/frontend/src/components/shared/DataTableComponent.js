@@ -45,10 +45,14 @@ function DataTableComponent(props) {
     const [data, setData] = useState();
 
     const getData = async () => {
-        console.log("Pidiendo la información")
         const dataApi = await apiProducts.getProducts.list();
-        console.log("Data " + dataApi);
+        console.log(dataApi);
         setData(dataApi);
+    }
+
+    const deleteData = async (id) => {
+        const deleteApi = await apiProducts.getProducts.delete(id);
+        console.log(deleteApi);
     }
 
     useEffect(() => {
@@ -87,6 +91,72 @@ function DataTableComponent(props) {
                         filterTooltip: 'Filter'
                     }
                 }
+            }}
+            editable={{
+                onRowAdd: newData =>
+                    new Promise((resolve, reject) => {
+                        async function postData(url = '', dataALL = { newData }) {
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                mode: 'cors',
+                                cache: 'no-cache',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                redirect: 'follow',
+                                referrerPolicy: 'no-referrer',
+                                body: JSON.stringify(newData)
+                            });
+                            return response.json();
+                        }
+
+                        postData('http://localhost:3002/api/users')
+                            .then(dataALL => {
+                                console.log(dataALL);
+                                setData([...data, newData]);
+                                resolve();
+                            });
+                    }),
+                onRowUpdate: (newData, oldData) =>
+                    new Promise((resolve, reject) => {
+                        async function postData(url = '', dataALL = { newData }) {
+                            const response = await fetch(url, {
+                                method: 'PUT',
+                                mode: 'cors',
+                                cache: 'no-cache',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                redirect: 'follow',
+                                referrerPolicy: 'no-referrer',
+                                body: JSON.stringify(newData)
+                            });
+                            return response.json();
+                        }
+                        postData('http://localhost:3002/api/users/' + newData._id)
+                            .then(dataALL => {
+                                console.log(dataALL);
+                                const dataUpdate = [...data];
+                                const index = oldData.tableData.id;
+                                dataUpdate[index] = newData;
+                                setData([...dataUpdate]);
+                                resolve();
+                            });
+                    }),
+                onRowDelete: oldData =>
+                    new Promise((resolve, reject) => {
+                        const isDelete = deleteData(oldData._id);
+                        if (isDelete) {
+                            const dataDelete = [...data];
+                            const index = oldData.tableData.id;
+                            dataDelete.splice(index, 1);
+                            setData([...dataDelete]);
+
+                            resolve();
+                        }
+                    }),
             }}
         />
     )

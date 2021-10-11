@@ -1,9 +1,5 @@
 const columns = [
     {
-        title: 'Identificacion',
-        field: '_id'
-    },
-    {
         title: 'Producto',
         field: 'name'
     },

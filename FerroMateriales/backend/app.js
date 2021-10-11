@@ -4,6 +4,7 @@ const cors = require("cors");
 var app = express();
 
 const productsRoutes = require('./routes/products')
+const categoriesRoutes = require('./routes/categories')
 
 // Configuración para interpretar json.
 app.use(express.json());
@@ -22,5 +23,6 @@ mongoose
 
 // Definimos las rutas
 app.use('/api/products', productsRoutes)
+app.use('/api/categories', categoriesRoutes)
 
 module.exports = app;
