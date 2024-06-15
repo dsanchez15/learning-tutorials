@@ -1,0 +1,16 @@
+{
+  "name": "nodejs-brevo-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --env-file .env --watch server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@getbrevo/brevo": "^2.1.1"
+  },
+  "type": "module"
+}
